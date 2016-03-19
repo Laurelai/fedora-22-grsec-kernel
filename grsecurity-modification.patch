@@ -1,0 +1,78 @@
+--- 4420_grsecurity-3.1-4.4.5-201603142220.patch	2016-03-15 02:47:18.000000000 -0400
++++ 4421_grsecurity-3.1-4.4.5-201603142220.patch	2016-03-18 21:38:43.356544693 -0400
+@@ -16515,27 +16515,7 @@
+  	ret
+  	_ASM_NOKPROBE(restore)
+  #endif
+-diff --git a/arch/x86/entry/vdso/Makefile b/arch/x86/entry/vdso/Makefile
+-index 265c0ed..a9ca19a 100644
+---- a/arch/x86/entry/vdso/Makefile
+-+++ b/arch/x86/entry/vdso/Makefile
+-@@ -69,7 +69,7 @@ CFL := $(PROFILING) -mcmodel=small -fPIC -O2 -fasynchronous-unwind-tables -m64 \
+-        -fno-omit-frame-pointer -foptimize-sibling-calls \
+-        -DDISABLE_BRANCH_PROFILING -DBUILD_VDSO
+- 
+--$(vobjs): KBUILD_CFLAGS += $(CFL)
+-+$(vobjs): KBUILD_CFLAGS := $(filter-out $(GCC_PLUGINS_CFLAGS),$(KBUILD_CFLAGS)) $(CFL)
+- 
+- #
+- # vDSO code runs in userspace and -pg doesn't help with profiling anyway.
+-@@ -162,7 +162,7 @@ quiet_cmd_vdso = VDSO    $@
+- 		       -Wl,-T,$(filter %.lds,$^) $(filter %.o,$^) && \
+- 		 sh $(srctree)/$(src)/checkundef.sh '$(NM)' '$@'
+- 
+--VDSO_LDFLAGS = -fPIC -shared $(call cc-ldoption, -Wl$(comma)--hash-style=both) \
+-+VDSO_LDFLAGS = -fPIC -shared -Wl,--no-undefined $(call cc-ldoption, -Wl$(comma)--hash-style=both) \
+- 	$(call cc-ldoption, -Wl$(comma)--build-id) -Wl,-Bsymbolic $(LTO_CFLAGS)
+- GCOV_PROFILE := n
++
+  
+ diff --git a/arch/x86/entry/vdso/vdso2c.h b/arch/x86/entry/vdso/vdso2c.h
+ index 0224987..0359810 100644
+@@ -108651,45 +108631,7 @@
+  	void *pmi_start;
+  	void *pmi_pal;
+  	u8 *vbe_state_orig;		/*
+-diff --git a/init/Kconfig b/init/Kconfig
+-index 235c7a2..8dbf372 100644
+---- a/init/Kconfig
+-+++ b/init/Kconfig
+-@@ -285,7 +285,8 @@ config FHANDLE
+- 
+- config USELIB
+- 	bool "uselib syscall"
+--	default y
+-+	default n
+-+	depends on !GRKERNSEC
+- 	help
+- 	  This option enables the uselib syscall, a system call used in the
+- 	  dynamic linker from libc5 and earlier.  glibc does not use this
+-@@ -633,6 +634,7 @@ config RCU_FAST_NO_HZ
+- config TREE_RCU_TRACE
+- 	def_bool RCU_TRACE && ( TREE_RCU || PREEMPT_RCU )
+- 	select DEBUG_FS
+-+	depends on !GRKERNSEC_KMEM
+- 	help
+- 	  This option provides tracing for the TREE_RCU and
+- 	  PREEMPT_RCU implementations, permitting Makefile to
+-@@ -1156,6 +1158,7 @@ endif # CGROUPS
+- config CHECKPOINT_RESTORE
+- 	bool "Checkpoint/restore support" if EXPERT
+- 	select PROC_CHILDREN
+-+	depends on !GRKERNSEC
+- 	default n
+- 	help
+- 	  Enables additional kernel features in a sake of checkpoint/restore.
+-@@ -1701,7 +1704,7 @@ config SLUB_DEBUG
+- 
+- config COMPAT_BRK
+- 	bool "Disable heap randomization"
+--	default y
+-+	default n
+- 	help
+- 	  Randomizing heap placement makes heap exploits harder, but it
+- 	  also breaks ancient binaries (including anything libc5 based).
++
+ diff --git a/init/Makefile b/init/Makefile
+ index 7bc47ee..6da2dc7 100644
+ --- a/init/Makefile
