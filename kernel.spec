@@ -566,7 +566,7 @@ Patch492: Add-sysrq-option-to-disable-secure-boot-mode.patch
 
 Patch493: drm-i915-hush-check-crtc-state.patch
 
-Patch494: disable-i8042-check-on-apple-mac.patch
+#Patch494: disable-i8042-check-on-apple-mac.patch
 
 Patch495: lis3-improve-handling-of-null-rate.patch
 
@@ -1268,7 +1268,7 @@ ApplyPatch Add-sysrq-option-to-disable-secure-boot-mode.patch
 
 ApplyPatch drm-i915-hush-check-crtc-state.patch
 
-ApplyPatch disable-i8042-check-on-apple-mac.patch
+#ApplyPatch disable-i8042-check-on-apple-mac.patch
 
 ApplyPatch lis3-improve-handling-of-null-rate.patch
 
