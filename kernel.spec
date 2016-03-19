@@ -534,7 +534,7 @@ Patch474: PCI-Lock-down-BAR-access-when-module-security-is-ena.patch
 
 # Patch477: asus-wmi-Restrict-debugfs-interface-when-module-load.patch
 
-Patch478: Restrict-dev-mem-and-dev-kmem-when-module-loading-is.patch
+# Patch478: Restrict-dev-mem-and-dev-kmem-when-module-loading-is.patch
 
 Patch479: acpi-Ignore-acpi_rsdp-kernel-parameter-when-module-l.patch
 
@@ -1236,7 +1236,7 @@ ApplyPatch PCI-Lock-down-BAR-access-when-module-security-is-ena.patch
 
 #ApplyPatch asus-wmi-Restrict-debugfs-interface-when-module-load.patch
 
-ApplyPatch Restrict-dev-mem-and-dev-kmem-when-module-loading-is.patch
+# ApplyPatch Restrict-dev-mem-and-dev-kmem-when-module-loading-is.patch
 
 ApplyPatch acpi-Ignore-acpi_rsdp-kernel-parameter-when-module-l.patch
 
